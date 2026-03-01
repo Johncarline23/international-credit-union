@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal | International Credit Union</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assest/css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Bank Admin</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" onclick="switchTab('users')"><i class="fas fa-users"></i> Users</button>
+                <button class="nav-btn" onclick="switchTab('messages')"><i class="fas fa-envelope"></i> Messages</button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <h2 id="page-title">User Management</h2>
+                <div class="admin-profile">
+                    <span>Administrator</span>
+                    <div class="avatar">A</div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Users Tab -->
+                <section id="users" class="tab-content active">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Registered Customers</h3>
+                            <button class="refresh-btn" onclick="fetchUsers()"><i class="fas fa-sync"></i> Refresh</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Joined</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Messages Tab -->
+                <section id="messages" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Contact Messages</h3>
+                            <button class="refresh-btn" onclick="fetchMessages()"><i class="fas fa-sync"></i> Refresh</button>
+                        </div>
+                        <div class="message-list" id="messages-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="font-size: 3rem; color: var(--secondary); margin-bottom: 15px;">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h3 style="margin-bottom: 10px; color: var(--primary);">Confirm Action</h3>
+            <p id="confirm-message" style="margin-bottom: 25px; color: #555;">Are you sure?</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="action-btn" style="background: #eee; color: #333;" onclick="closeConfirmModal()">Cancel</button>
+                <button class="action-btn" id="confirm-action-btn" style="background: var(--secondary); color: white;">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assest/js/admin.js"></script>
+</body>
+</html>

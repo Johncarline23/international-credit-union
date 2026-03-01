@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <title>Dashboard | International Credit Union</title>
+  <!-- Google Font & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ----- COLOR VARIABLES (rusty red & midnight blue) ----- */
+    :root {
+      --midnight-blue: #00438F;
+      --rusty-red: #D8273F;
+      --pure-white: #FFFFFF;
+      --light-bg: #f4f7fc;
+      --soft-gray: #eef2f6;
+      --text-dark: #222;
+      --text-gray: #555;
+      --border: #e0e0e0;
+      --success: #27ae60;
+      --danger: #e74c3c;
+      --sidebar-width: 260px;
+    }
+
+    body.dashboard-body {
+      background-color: var(--light-bg);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .dashboard-container {
+      display: flex;
+      height: 100%;
+    }
+
+    /* ========== SIDEBAR (midnight blue) ========== */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--midnight-blue);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .sidebar-header {
+      padding-bottom: 30px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .sidebar-logo {
+      height: 40px;
+      object-fit: contain;
+      max-width: 100%;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.75);
+      padding: 12px 15px;
+      text-align: left;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn i {
+      width: 20px;
+      font-size: 1.1rem;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    .logout-btn {
+      background: rgba(216, 39, 63, 0.2);
+      color: #ffb3b3;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: 0.2s;
+      font-weight: 600;
+    }
+
+    .logout-btn:hover {
+      background: rgba(216, 39, 63, 0.3);
+      color: white;
+    }
+
+    /* ========== MAIN CONTENT ========== */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .dash-header {
+      background: var(--pure-white);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      color: var(--text-dark);
+    }
+
+    .badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--rusty-red);
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 5px;
+      border-radius: 50%;
+    }
+
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      cursor: pointer;
+    }
+
+    /* Notifications */
+    .notification-wrapper {
+      position: relative;
+    }
+
+    .notif-dropdown {
+      position: absolute;
+      top: 40px;
+      right: 0;
+      width: 300px;
+      max-width: 85vw;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 100;
+    }
+
+    .notif-dropdown.show {
+      display: block;
+    }
+
+    .notif-header {
+      padding: 10px 15px;
+      font-weight: bold;
+      border-bottom: 1px solid var(--border);
+      background: #f9f9f9;
+    }
+
+    .notif-list {
+      list-style: none;
+    }
+
+    .notif-list li {
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      user-select: none;
+    }
+
+    .notif-list li:hover {
+      background-color: #f9f9f9;
+    }
+
+    .notif-list li.unread {
+      background: #f0f7ff;
+      border-left: 3px solid var(--midnight-blue);
+      padding-left: 12px;
+      font-weight: 500;
+    }
+
+    .notif-list li.unread:hover {
+      background: #e6f1ff;
+    }
+
+    /* Profile Dropdown */
+    .profile-wrapper {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .profile-dropdown {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      width: 160px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 100;
+      overflow: hidden;
+    }
+
+    .profile-dropdown.show { display: block; }
+
+    .profile-dropdown a {
+      display: block; padding: 12px 15px; color: var(--text-dark); text-decoration: none; font-size: 0.9rem; transition: 0.2s;
+    }
+    .profile-dropdown a:hover { background: #f4f7fc; color: var(--midnight-blue); }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Toast Container */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+    .toast {
+      background: var(--midnight-blue);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideIn 0.3s;
+      max-width: 300px;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* In-place Receipt Styles */
+    .zelle-receipt-view {
+      text-align: center;
+      animation: fadeIn 0.5s;
+    }
+    .receipt-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+    .receipt-icon.success { color: var(--success); }
+    .zelle-receipt-view h2 {
+      color: var(--midnight-blue);
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .receipt-message {
+      color: var(--text-gray);
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+    .receipt-recipient {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+    }
+    .receipt-details {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-gray);
+    }
+
+    /* ========== OVERVIEW ========== */
+    .overview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .net-worth {
+      text-align: right;
+    }
+    .net-worth span { font-size: 0.9rem; color: var(--text-gray); }
+    .net-worth h3 { font-size: clamp(1.5rem, 4vw, 1.8rem); color: var(--midnight-blue); margin: 0; }
+
+    .dashboard-grid-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    /* Balance Card */
+    .balance-card {
+      background: linear-gradient(135deg, var(--midnight-blue), #1a5a9c);
+      color: white;
+      padding: clamp(20px, 4vw, 30px);
+      border-radius: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 20px rgba(0,67,143,0.2);
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .balance-info h1 { font-size: clamp(2rem, 5vw, 2.5rem); margin: 5px 0; }
+    .balance-info span { opacity: 0.8; font-size: 0.9rem; }
+
+    .quick-actions button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 30px;
+      margin-left: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 1rem;
+    }
+
+    .quick-actions button:hover { background: white; color: var(--midnight-blue); }
+
+    /* Accounts List */
+    .accounts-list-container { margin-top: 30px; }
+    .section-header { margin-bottom: 15px; color: var(--midnight-blue); font-size: 1.2rem; }
+
+    .account-row {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      transition: 0.2s;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .account-row:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+    .acc-icon { width: 40px; height: 40px; background: #eef3ff; color: var(--midnight-blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.2rem; }
+    .acc-details { flex: 1; min-width: 150px; }
+    .acc-details h4 { font-size: 1rem; margin-bottom: 2px; }
+    .acc-details span { font-size: 0.85rem; color: var(--text-gray); }
+    .acc-amount { font-weight: bold; font-size: 1.1rem; color: var(--midnight-blue); white-space: nowrap; }
+
+    /* Insights Row */
+    .insights-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin: 30px 0;
+    }
+
+    .insight-card {
+      background: white;
+      border-radius: 16px;
+      padding: 22px;
+      border: 1px solid var(--border);
+    }
+
+    .insight-card h3 {
+      color: var(--midnight-blue);
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+    }
+
+    .goal-item {
+      margin-bottom: 20px;
+    }
+
+    .goal-item .goal-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .progress-bar {
+      background: #e9ecef;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: var(--rusty-red);
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    .spending-bars {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 150px;
+      margin-top: 20px;
+    }
+
+    .bar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      max-width: 40px;
+    }
+
+    .bar {
+      width: min(30px, 100%);
+      background: var(--midnight-blue);
+      border-radius: 4px 4px 0 0;
+      transition: height 0.3s;
+    }
+
+    .bar-label {
+      font-size: 0.8rem;
+      margin-top: 8px;
+      color: var(--text-gray);
+    }
+
+    /* Transactions Widget */
+    .transactions-widget { background: white; border-radius: 12px; border: 1px solid var(--border); height: 100%; }
+    .widget-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .widget-header a { color: var(--rusty-red); text-decoration: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: 0.2s; display: inline-block; }
+    .widget-header a:hover { background-color: rgba(216, 39, 63, 0.1); text-decoration: underline; }
+
+    .transaction-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .trans-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .trans-icon.income { background: #eafaf1; color: var(--success); }
+    .trans-icon.expense { background: #fdedec; color: var(--danger); }
+    .trans-details { flex: 1; min-width: 140px; }
+    .trans-details h4 { font-size: 0.95rem; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .trans-details span { font-size: 0.8rem; color: var(--text-gray); }
+    .trans-amount { font-weight: bold; flex-shrink: 0; white-space: nowrap; }
+    .trans-amount.positive { color: var(--success); }
+    .trans-amount.negative { color: var(--text-dark); }
+
+    /* ========== OTHER TABS (common styles) ========== */
+    .quick-send-row { margin-bottom: 30px; }
+    .quick-send-row p { font-weight: 600; margin-bottom: 10px; color: var(--text-gray); }
+    .avatars { display: flex; gap: 15px; flex-wrap: wrap; }
+    .avatar-circle { width: 50px; height: 50px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #555; cursor: pointer; transition: 0.2s; }
+    .avatar-circle:hover { background: var(--rusty-red); color: white; }
+    .avatar-circle.add-new { background: white; border: 2px dashed #ccc; color: #ccc; }
+    .avatar-circle.add-new:hover { border-color: var(--rusty-red); color: var(--rusty-red); background: white; }
+
+    .transfer-grid, .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+      gap: 30px;
+    }
+
+    .form-card {
+      background: white;
+      padding: clamp(20px, 4vw, 30px);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .card-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--midnight-blue); }
+    .zelle-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+    .zelle-logo-text { color: #6d1ed4; font-weight: 900; font-size: 1.4rem; }
+    .zelle-card { border-color: #6d1ed4; }
+
+    form label { display: block; margin-bottom: 8px; font-size: 0.9rem; font-weight: 600; color: var(--text-dark); }
+    form input, form select {
+      width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; font-size: 1rem; font-family: 'Inter', sans-serif;
+    }
+
+    form input:focus, form select:focus {
+      outline: none;
+      border-color: var(--midnight-blue);
+      box-shadow: 0 0 0 3px rgba(0, 67, 143, 0.1);
+    }
+
+    form input:hover, form select:hover {
+      border-color: var(--midnight-blue);
+    }
+
+    form select {
+      background-color: var(--pure-white);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300438F' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 35px;
+      cursor: pointer;
+    }
+
+    form select option {
+      padding: 10px;
+      background-color: white;
+      color: var(--text-dark);
+    }
+
+    .primary-btn { background: var(--midnight-blue); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; }
+    .secondary-btn { background: #eee; color: var(--text-dark); border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; }
+    .zelle-btn { background: #6d1ed4; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; }
+
+    .linked-accounts { margin-bottom: 30px; }
+    .linked-item { background: white; padding: 15px; border-radius: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+    .bank-icon { width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .bank-info { flex: 1; min-width: 140px; }
+    .bank-info h4 { font-size: 0.95rem; }
+    .bank-info span { font-size: 0.8rem; color: var(--text-gray); }
+    .unlink-btn { background: none; border: 1px solid var(--danger); color: var(--danger); padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
+    .unlink-btn:hover { background: var(--danger); color: white; }
+
+    .form-group-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+    .pref-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; flex-wrap: wrap; gap: 10px; }
+
+    /* Footer */
+    .main-footer {
+      background: var(--midnight-blue);
+      color: #e2ecff;
+      margin-top: 50px;
+      border-radius: 12px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 40px 20px;
+    }
+    .footer-col h3, .footer-col h4 { color: var(--rusty-red); margin-bottom: 15px; }
+    .footer-col p, .footer-col li { color: #c6daff; font-size: 0.9rem; }
+    .footer-col ul { list-style: none; }
+    .footer-col li a { color: #c6daff; text-decoration: none; }
+    .footer-col li a:hover { color: var(--rusty-red); }
+    .footer-bottom { padding: 20px; text-align: center; border-top: 1px solid #3060a0; color: #b3ceff; }
+
+    /* Mobile Bottom Nav */
+    .bottom-nav {
+      display: none;
+    }
+
+    /* ========== RESPONSIVE BREAKPOINTS ========== */
+    @media (max-width: 1000px) {
+      .dashboard-grid-layout { grid-template-columns: 1fr; }
+      .insights-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .bottom-nav {
+        display: flex; justify-content: space-around;
+        position: fixed; bottom: 0; width: 100%;
+        background: white; border-top: 1px solid var(--border);
+        padding: 10px 0; z-index: 1000;
+      }
+      .nav-item {
+        text-decoration: none; color: var(--text-gray);
+        display: flex; flex-direction: column; align-items: center; font-size: 0.8rem;
+      }
+      .nav-item.active { color: var(--midnight-blue); }
+      .content-area { padding: 15px; padding-bottom: 80px; }
+      .balance-card { flex-direction: column; text-align: center; gap: 20px; }
+      .quick-actions button { margin: 5px; }
+      .transfer-grid, .settings-grid { grid-template-columns: 1fr; }
+      .dash-header { padding: 15px; }
+      .footer-top { grid-template-columns: 1fr; text-align: center; }
+      .footer-col { margin-bottom: 20px; }
+      .account-row { flex-direction: column; align-items: flex-start; }
+      .acc-details { width: 100%; }
+      .acc-amount { align-self: flex-end; }
+      .transaction-item { flex-wrap: nowrap; } /* keep row on mobile */
+    }
+
+    @media (max-width: 600px) {
+      .transaction-item { flex-wrap: wrap; }
+      .trans-details { width: 100%; }
+      .trans-amount { align-self: flex-end; }
+      .form-group-row { grid-template-columns: 1fr; }
+      .balance-info h1 { font-size: 2rem; }
+      .dash-header { flex-direction: column; align-items: stretch; }
+      .header-right { justify-content: flex-end; }
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 15px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: var(--midnight-blue);
+      font-size: 1.5rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-gray);
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      color: var(--text-dark);
+    }
+
+    .modal-body {
+      padding: 20px 0;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--soft-gray);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      color: var(--text-gray);
+      font-weight: 500;
+    }
+
+    .detail-value {
+      color: var(--text-dark);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* Custom Dropdown Styling */
+    .custom-select {
+      position: relative;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .select-button {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: var(--pure-white);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+
+    .select-button:hover {
+      border-color: var(--midnight-blue);
+      background-color: #f9f9f9;
+    }
+
+    .select-button:focus {
+      outline: none;
+      border-color: var(--midnight-blue);
+      box-shadow: 0 0 0 3px rgba(0, 67, 143, 0.1);
+    }
+
+    .select-button.active {
+      border-color: var(--midnight-blue);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .select-button-text {
+      flex: 1;
+      text-align: left;
+      color: var(--text-dark);
+    }
+
+    .select-button-arrow {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+      color: var(--midnight-blue);
+    }
+
+    .select-button.active .select-button-arrow {
+      transform: rotate(180deg);
+    }
+
+    .select-dropdown {
+      position: absolute;
+      top: calc(100% + 1px);
+      left: 0;
+      right: 0;
+      background: var(--pure-white);
+      border: 1px solid var(--midnight-blue);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .select-dropdown.active {
+      display: block;
+    }
+
+    .select-option {
+      padding: 15px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.2s;
+      color: var(--text-dark);
+      font-size: 0.95rem;
+    }
+
+    .select-option:last-child {
+      border-bottom: none;
+    }
+
+    .select-option:hover {
+      background-color: #f0f7fc;
+      color: var(--midnight-blue);
+      font-weight: 500;
+    }
+
+    .select-option.selected {
+      background-color: #e6f1ff;
+      color: var(--midnight-blue);
+      font-weight: 600;
+      border-left: 4px solid var(--midnight-blue);
+      padding-left: 11px;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <div class="dashboard-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="assest/images/logo.jpeg" alt="ICU Logo" class="sidebar-logo" />
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-tab="overview"><i class="fas fa-th-large"></i> Overview</button>
+        <button class="nav-btn" data-tab="history"><i class="fas fa-history"></i> History</button>
+        <button class="nav-btn" data-tab="transfers"><i class="fas fa-exchange-alt"></i> Transfers & Zelle®</button>
+        <button class="nav-btn" data-tab="accounts"><i class="fas fa-university"></i> External Accounts</button>
+        <button class="nav-btn" data-tab="settings"><i class="fas fa-cog"></i> Settings</button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <header class="dash-header">
+        <div class="header-left">
+          <h2 id="header-title">Dashboard</h2>
+        </div>
+        <div class="header-right">
+          <div class="notification-wrapper">
+            <button class="icon-btn" id="notifBtn">
+              <i class="far fa-bell"></i>
+              <span class="badge" style="display: none;"></span>
+            </button>
+            <div class="notif-dropdown" id="notifDropdown">
+              <div class="notif-header">Notifications</div>
+              <ul class="notif-list">
+              </ul>
+            </div>
+          </div>
+          <div class="profile-wrapper">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23ccc'/%3E%3Ctext x='10' y='25' fill='white'%3E👤%3C/text%3E%3C/svg%3E" alt="Profile" class="profile-pic" id="profileBtn" />
+            <div class="profile-dropdown" id="profileDropdown">
+              <a href="#" onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <!-- OVERVIEW TAB -->
+        <section id="overview" class="tab-content active">
+          <div class="overview-header">
+            <div>
+              <h2 id="user-greeting">Welcome back</h2>
+              <p class="text-muted">Here's what's happening with your money today.</p>
+            </div>
+          </div>
+
+          <div class="dashboard-grid-layout">
+            <!-- Left Column -->
+            <div class="dash-left">
+              <!-- Main Balance Card -->
+              <div class="balance-card">
+                <div class="balance-info">
+                  <p id="main-balance-account-name">Total Balance</p>
+                  <h1 id="main-balance-amount">$0.00</h1>
+                  <span>Available Balance</span>
+                </div>
+                <div class="quick-actions">
+                  <button onclick="switchTab('transfers')" title="Send Money"><i class="fas fa-paper-plane"></i></button>
+                  <button onclick="switchTab('transfers')" title="Transfer"><i class="fas fa-exchange-alt"></i></button>
+                </div>
+              </div>
+
+              <!-- Accounts List -->
+              <div class="accounts-list-container" id="accounts-list-container">
+                <h3 class="section-header">Your Accounts</h3>
+                <!-- JS will inject rows here -->
+              </div>
+
+              <!-- Insights Row (Savings Goals + Spending) -->
+              <div class="insights-row">
+                <div class="insight-card">
+                  <h3><i class="fas fa-chart-line" style="color: var(--rusty-red); margin-right: 8px;"></i> Spending Insights</h3>
+                  <div class="spending-bars" id="spending-bars"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="dash-right">
+              <div class="transactions-widget">
+                <div class="widget-header">
+                  <h3>Recent Activity</h3>
+                  <a href="#" onclick="switchTab('history'); return false;">View All</a>
+                </div>
+                <div class="transaction-list" id="transaction-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HISTORY TAB -->
+        <section id="history" class="tab-content">
+          <div class="transactions-widget" style="height: auto;">
+            <div class="widget-header">
+              <h3>All Transactions</h3>
+              <button class="secondary-btn" style="width: auto; padding: 5px 15px; font-size: 0.8rem;" onclick="fetchTransactionHistory()">Refresh</button>
+            </div>
+            <div class="transaction-list" id="full-transaction-list"></div>
+          </div>
+        </section>
+
+        <!-- TRANSFERS TAB -->
+        <section id="transfers" class="tab-content">
+          <div class="transfer-grid">
+            <!-- Internal Transfer -->
+            <div class="form-card">
+              <div class="card-title"><i class="fas fa-wallet" style="color: var(--rusty-red);"></i> Internal Transfer</div>
+              <form id="transfer-form">
+                <label>From Account</label>
+                <div class="custom-select" id="transfer-from-wrapper">
+                  <button type="button" class="select-button" id="transfer-from-button">
+                    <span class="select-button-text">Select Account</span>
+                    <span class="select-button-arrow">▼</span>
+                  </button>
+                  <div class="select-dropdown" id="transfer-from-dropdown"></div>
+                </div>
+                <label>To Account</label>
+                <div class="custom-select" id="transfer-to-wrapper">
+                  <button type="button" class="select-button" id="transfer-to-button">
+                    <span class="select-button-text">Select Account</span>
+                    <span class="select-button-arrow">▼</span>
+                  </button>
+                  <div class="select-dropdown" id="transfer-to-dropdown"></div>
+                </div>
+                <label>Amount ($)</label>
+                <input type="number" id="transfer-amount" placeholder="0.00" required>
+                <button type="submit" class="primary-btn">Transfer Funds</button>
+              </form>
+            </div>
+
+            <!-- Zelle -->
+            <div class="form-card zelle-card">
+              <div class="zelle-header">
+                <div class="card-title">Send with Zelle®</div>
+                <span class="zelle-logo-text">Zelle</span>
+              </div>
+              <form id="zelle-form">
+                <label>Recipient (Email or Mobile)</label>
+                <input type="text" id="zelle-recipient" placeholder="Enter email or phone" required>
+                <label>Amount ($)</label>
+                <input type="number" id="zelle-amount" placeholder="0.00" required>
+                <label>Memo (Optional)</label>
+                <input type="text" placeholder="What is this for?">
+                <button type="submit" class="zelle-btn">Send Money</button>
+              </form>
+
+              <!-- In-place Zelle Receipt -->
+              <div class="zelle-receipt-view" id="zelle-receipt" style="display: none;">
+                <div class="receipt-icon success"><i class="fas fa-check-circle"></i></div>
+                <h2>Transfer Sent</h2>
+                <p class="receipt-message">You sent <strong id="zelle-receipt-amount">$0.00</strong> to</p>
+                <p class="receipt-recipient" id="zelle-receipt-recipient">recipient@email.com</p>
+                <div class="receipt-details">
+                  <span>Transaction Date</span>
+                  <span id="zelle-receipt-date">February 28, 2026</span>
+                </div>
+                <button class="secondary-btn" onclick="resetZelleView()" style="margin-top: 20px;">Make Another Transfer</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXTERNAL ACCOUNTS TAB -->
+        <section id="accounts" class="tab-content">
+          <div class="form-card">
+            <h3>Link a New Account</h3>
+            <p class="form-desc">Securely connect your accounts from other financial institutions.</p>
+            <form id="link-account-form">
+              <div class="form-group-row">
+                <div><label>Bank Name</label><input type="text" id="link-bank-name" placeholder="e.g. Chase" required></div>
+                <div><label>Routing Number</label><input type="text" id="link-routing" placeholder="9-digit" required></div>
+              </div>
+              <div class="form-group-row">
+                <div><label>Account Number</label><input type="text" id="link-account" placeholder="Account number" required></div>
+                <div><label>Confirm Account</label><input type="text" placeholder="Re-enter account number"></div>
+              </div>
+              <button type="submit" class="primary-btn" style="margin-top:10px;">Verify & Link</button>
+            </form>
+          </div>
+
+          <div class="linked-accounts" id="linked-accounts-list" style="margin-top: 30px;">
+            <h3 class="section-header" style="font-size: 1rem;">Linked Institutions</h3>
+          </div>
+        </section>
+
+        <!-- SETTINGS TAB -->
+        <section id="settings" class="tab-content">
+          <div class="settings-grid">
+            <div class="form-card">
+              <h3>Profile Information</h3>
+              <form id="profile-form">
+                <label>Full Name</label>
+                <input type="text" id="settings-name" value="User Name" readonly style="background:#f9f9f9;">
+                <label>Email Address</label>
+                <input type="email" id="settings-email" value="user@example.com">
+                <label>Phone Number</label>
+                <input type="tel" id="settings-phone" value="+1 (555) 123-4567">
+                <button type="submit" class="secondary-btn">Save Changes</button>
+              </form>
+            </div>
+            <div class="form-card">
+              <h3>Security</h3>
+              <form id="password-form">
+                <label>Current Password</label>
+                <input type="password" id="current-password" placeholder="••••••••" required>
+                <label>New Password</label>
+                <input type="password" id="new-password" placeholder="New password" required>
+                <label>Confirm New Password</label>
+                <input type="password" id="confirm-password" placeholder="Confirm" required>
+                <button type="submit" class="primary-btn">Update Password</button>
+              </form>
+            </div>
+            <div class="form-card">
+              <h3>Preferences</h3>
+              <div class="pref-row"><span>Paperless Statements</span><input type="checkbox" checked></div>
+              <div class="pref-row"><span>Email Notifications</span><input type="checkbox" checked></div>
+              <div class="pref-row"><span>SMS Alerts</span><input type="checkbox"></div>
+              <div class="pref-row"><span>Marketing Offers</span><input type="checkbox"></div>
+              <button class="secondary-btn" style="margin-top:20px;">Update Preferences</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active" onclick="switchTab('overview')"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="#" class="nav-item" onclick="switchTab('history')"><i class="fas fa-history"></i><span>History</span></a>
+    <a href="#" class="nav-item" onclick="switchTab('transfers')"><i class="fas fa-exchange-alt"></i><span>Transfer</span></a>
+    <a href="#" class="nav-item" onclick="switchTab('accounts')"><i class="fas fa-university"></i><span>Accounts</span></a>
+    <a href="#" class="nav-item" onclick="switchTab('settings')"><i class="fas fa-cog"></i><span>Settings</span></a>
+  </nav>
+
+  <!-- Transaction Details Modal -->
+  <div class="modal-overlay" id="transaction-details-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Transaction Details</h2>
+        <button class="modal-close" onclick="closeTransactionModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-row">
+          <span class="detail-label">Transaction Type</span>
+          <span class="detail-value" id="tx-detail-type">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Amount</span>
+          <span class="detail-value" id="tx-detail-amount">$0.00</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Date & Time</span>
+          <span class="detail-value" id="tx-detail-date">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Description</span>
+          <span class="detail-value" id="tx-detail-desc">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Account</span>
+          <span class="detail-value" id="tx-detail-account">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Transaction ID</span>
+          <span class="detail-value" id="tx-detail-id">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assest/js/dashboard.js"></script>
+</body>
+</html>
