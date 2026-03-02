@@ -28,6 +28,47 @@ app.get('/admin-login', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin-login.html'));
 });
 
+// Static Page Routes
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/business.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'business.html'));
+});
+
+app.get('/Corporate.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Corporate.html'));
+});
+
+app.get('/Wealth_management.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Wealth_management.html'));
+});
+
+app.get('/contact-us.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'contact-us.html'));
+});
+
+app.get('/loans.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'loans.html'));
+});
+
+app.get('/open-account.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'open-account.html'));
+});
+
+app.get('/forgot-password.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'forgot-password.html'));
+});
+
+app.get('/enroll.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'enroll.html'));
+});
+
+app.get('/Security.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Security.html'));
+});
+
 // Login Route
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
