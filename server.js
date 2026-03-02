@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
+const PgSession = require('connect-pg-simple')(session);
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const db = require('./database');
@@ -14,10 +15,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // Session Configuration
 app.use(session({
+    store: new PgSession({
+        pool: db,
+        tableName: 'session'
+    }),
     secret: process.env.SESSION_SECRET || 'super_secret_key_change_this_in_production',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // Set to true if using HTTPS
+    cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
 
 // Serve static files (CSS, JS, Images, HTML) from the current directory
