@@ -7,6 +7,10 @@ const bcrypt = require('bcryptjs');
 const { pool: db, initDb } = require('./database');
 
 const app = express();
+// when running behind a proxy (like Vercel), express must trust it
+// so that req.secure is populated correctly and secure cookies are sent.
+app.set('trust proxy', 1);
+
 const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies (useful for future form submissions)
