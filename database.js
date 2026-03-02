@@ -15,6 +15,11 @@ const pool = new Pool({
     }
 });
 
+// Handle unexpected pool errors
+pool.on('error', (err, client) => {
+    console.error('Unexpected error on idle client', err);
+});
+
 const initDb = async () => {
     try {
         const client = await pool.connect();

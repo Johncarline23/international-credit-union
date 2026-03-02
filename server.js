@@ -23,11 +23,6 @@ app.use(session({
 // Serve static files (CSS, JS, Images, HTML) from the current directory
 app.use(express.static(path.join(__dirname)));
 
-// Explicit route for the home page
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
 // Admin Login Page Route
 app.get('/admin-login', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin-login.html'));
@@ -451,6 +446,11 @@ app.get('/logout', (req, res) => {
     req.session.destroy(() => {
         res.redirect('/');
     });
+});
+
+// API 404 Handler (Returns JSON for API errors)
+app.all('/api/*', (req, res) => {
+    res.status(404).json({ error: 'API endpoint not found' });
 });
 
 // Handle 404 - Page Not Found
