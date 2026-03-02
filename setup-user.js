@@ -1,5 +1,5 @@
 require('dotenv').config();
-const db = require('./database');
+const { pool: db } = require('./database');
 const bcrypt = require('bcryptjs');
 
 const setupUser = async () => {
@@ -127,6 +127,14 @@ const setupUser = async () => {
         }
         console.log(`Created ${savingsTransactions.length} transactions for Savings Account`);
         
+        // Verify password
+        console.log('\nVerifying password...');
+        const verifyUser = await db.query('SELECT password FROM users WHERE id = $1', [userId]);
+        const savedHash = verifyUser.rows[0].password;
+        const isMatch = await bcrypt.compare(password, savedHash);
+        if (isMatch) console.log('✅ Password verification successful!');
+        else console.error('❌ Password verification FAILED!');
+
         console.log('\n✅ User setup complete!');
         console.log(`\nUser Details:`);
         console.log(`  Username: ${username}`);

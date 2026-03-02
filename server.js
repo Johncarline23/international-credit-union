@@ -4,7 +4,7 @@ const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
 const path = require('path');
 const bcrypt = require('bcryptjs');
-const db = require('./database');
+const { pool: db, initDb } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,7 +40,9 @@ app.get('/', (req, res) => {
 
 // Login Route
 app.post('/login', (req, res) => {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
+    if (username) username = username.trim(); // Remove accidental whitespace
+    console.log(`Login attempt for: '${username}'`);
 
     db.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
         if (err) return res.status(500).json({ error: 'Database error' });
@@ -475,9 +477,23 @@ app.use((err, req, res, next) => {
 });
 
 if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
-    });
+    const startServer = async () => {
+        await initDb(); // Wait for the database to be ready
+
+        const server = app.listen(PORT, () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
+        });
+
+        server.on('error', (err) => {
+            if (err.code === 'EADDRINUSE') {
+                console.error(`\nError: Port ${PORT} is already in use.`);
+            } else {
+                console.error('An unexpected error occurred:', err);
+            }
+        });
+    };
+
+    startServer();
 }
 
 module.exports = app;

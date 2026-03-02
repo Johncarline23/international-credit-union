@@ -8,6 +8,11 @@ if (dns.setDefaultResultOrder) {
     dns.setDefaultResultOrder('ipv4first');
 }
 
+if (!process.env.DATABASE_URL) {
+    console.error('FATAL ERROR: DATABASE_URL is not defined in your environment. Please create a .env file and add the connection string.');
+    process.exit(1); // Exit the application
+}
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
@@ -121,6 +126,28 @@ const initDb = async () => {
             );
         `);
 
+        // Create Subscribers Table
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS subscribers (
+                id SERIAL PRIMARY KEY,
+                email VARCHAR(100) UNIQUE NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+
+        // Create Session Table for connect-pg-simple
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS "session" (
+                "sid" varchar NOT NULL,
+                "sess" json NOT NULL,
+                "expire" timestamp(6) NOT NULL,
+                CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
+            );
+        `);
+        await client.query(`
+            CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
+        `);
+
         // Add status and role columns to users if they don't exist
         try {
             await client.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'active'");
@@ -176,7 +203,7 @@ const initDb = async () => {
             await client.query("INSERT INTO savings_goals (user_id, name, target_amount, current_amount) VALUES ($1, 'Emergency Fund', 10000.00, 2500.00)", [userId]);
             await client.query("INSERT INTO savings_goals (user_id, name, target_amount, current_amount) VALUES ($1, 'New Car', 15000.00, 5000.00)", [userId]);
 
-            console.log("Default user 'admin' and accounts created.");
+            console.log("Default user 'Admin' and accounts created.");
         }
 
         // Ensure admin has admin role (in case it existed before schema update)
@@ -188,6 +215,4 @@ const initDb = async () => {
     }
 };
 
-initDb();
-
-module.exports = pool;
+module.exports = { pool, initDb };
