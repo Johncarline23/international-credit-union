@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ username, password })
                 });
 
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error('Server Error:', response.status, text);
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+
                 const data = await response.json();
 
                 if (data.success) {
@@ -55,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showToast('An error occurred. Please try again.', 'error');
+                showToast(error.message || 'An error occurred. Please try again.', 'error');
             }
         });
     }
