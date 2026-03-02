@@ -1,4 +1,12 @@
 {
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["*.html", "assets/**"] }
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/server.js" }
   ]
