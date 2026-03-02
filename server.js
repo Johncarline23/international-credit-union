@@ -14,14 +14,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // Session Configuration
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'super_secret_key_change_this_in_production',
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false } // Set to true if using HTTPS
 }));
 
 // Serve static files (CSS, JS, Images, HTML) from the current directory
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(__dirname));
 
 // Admin Login Page Route
 app.get('/admin-login', (req, res) => {
@@ -455,7 +455,7 @@ app.all('/api/*', (req, res) => {
 
 // Handle 404 - Page Not Found
 app.use((req, res) => {
-    res.status(404).send('<h1>404 - Page Not Found</h1><p>The requested page does not exist.</p><a href="/">Go Home</a>');
+    res.status(404).sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Global Error Handler (Helps debug Vercel 500 errors)
