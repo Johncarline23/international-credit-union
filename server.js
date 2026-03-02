@@ -28,6 +28,11 @@ app.get('/admin-login', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin-login.html'));
 });
 
+// Root Route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // Static Page Routes
 app.get('/index.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
